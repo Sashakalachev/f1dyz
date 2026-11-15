@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>F1DYZ — кейсы и апгрейдер</title>
+<style>
+:root{--bg:#0a0714;--p:#14102a;--p2:#1c1740;--ln:#2b2460;--acc:#7c5cff;--acc2:#00e0ff;--g:#2cff8a;--y:#ffd23f;--r:#ff3d6e}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:#fff;font-family:'Segoe UI',Arial,sans-serif;min-height:100vh;background-image:radial-gradient(600px 300px at 20% -5%,#3b1d9a55,transparent),radial-gradient(500px 300px at 90% 0,#00b7ff33,transparent)}
+.top{display:flex;align-items:center;gap:18px;padding:12px 22px;background:#0d0a1e;border-bottom:1px solid var(--ln);position:sticky;top:0;z-index:20;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:10px;font-weight:900;font-size:22px;letter-spacing:1px}
+.logo b{background:linear-gradient(90deg,var(--acc2),var(--acc));-webkit-background-clip:text;color:transparent}
+nav{display:flex;gap:6px;margin-left:10px}
+nav button{background:transparent;border:0;color:#aab;font:700 14px inherit;font-family:inherit;padding:9px 14px;border-radius:9px;cursor:pointer}
+nav button.on{background:var(--p2);color:#fff;box-shadow:inset 0 -2px 0 var(--acc)}
+.bal{margin-left:auto;display:flex;gap:10px;align-items:center}
+.bal .v{background:var(--p2);border:1px solid var(--ln);padding:8px 14px;border-radius:10px;font-weight:800;display:flex;gap:8px;align-items:center}
+.btn{border:0;border-radius:10px;padding:10px 18px;font:800 14px 'Segoe UI',Arial;color:#06110b;background:linear-gradient(#3dff96,#1fcf6b);cursor:pointer;box-shadow:0 3px 0 #0d7a40}
+.btn:active{transform:translateY(2px);box-shadow:none}
+.btn.alt{background:linear-gradient(#8f74ff,#6246e8);color:#fff;box-shadow:0 3px 0 #3b2a99}
+.btn.warn{background:linear-gradient(#ffd23f,#ffa800);box-shadow:0 3px 0 #9a6500}
+.btn:disabled{filter:grayscale(.9) brightness(.6);cursor:not-allowed}
+.feed{display:flex;gap:8px;padding:10px 22px;overflow:hidden;border-bottom:1px solid var(--ln);background:#0b0818;min-height:74px}
+.fd{flex:none;width:92px;height:54px;border-radius:8px;background:var(--p);border-bottom:3px solid var(--c);display:flex;align-items:center;gap:4px;padding:4px;animation:in .4s}
+.fd svg{width:36px;height:36px}.fd small{font-size:10px;color:#bbc;line-height:1.1}
+@keyframes in{from{transform:translateX(-30px);opacity:0}}
+.wrap{max-width:1180px;margin:auto;padding:20px}
+h2{font-size:20px;margin:6px 0 14px}
+.hero{border-radius:18px;padding:24px;background:linear-gradient(120deg,#3a1e9c,#0b5fa8);margin-bottom:22px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;border:1px solid #6d5cff}
+.hero h1{font-size:30px;font-weight:900}.hero p{opacity:.85;margin-top:4px}
+.stamps{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.stamps span{background:#0006;border:1px solid #fff3;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:700}
+.cases{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px}
+.case{background:var(--p);border:1px solid var(--ln);border-radius:16px;padding:16px;text-align:center;cursor:pointer;transition:.2s;position:relative;overflow:hidden}
+.case:hover{transform:translateY(-5px);border-color:var(--cc);box-shadow:0 10px 30px -10px var(--cc)}
+.case svg.box{width:130px;height:110px;filter:drop-shadow(0 0 14px var(--cc))}
+.case h3{margin:6px 0 2px}.case .pr{color:var(--y);font-weight:900;font-size:18px}
+.case small{color:#9a9ac0}
+.tag{position:absolute;top:10px;left:10px;background:var(--r);font-size:11px;font-weight:900;padding:3px 8px;border-radius:6px}
+.roll{background:var(--p);border:1px solid var(--ln);border-radius:16px;padding:18px;position:relative}
+.view{position:relative;height:170px;overflow:hidden;border-radius:12px;background:#0a0818;border:1px solid var(--ln)}
+.strip{display:flex;position:absolute;left:0;top:0;height:100%;will-change:transform}
+.cd{flex:none;width:140px;height:100%;margin-right:6px;background:linear-gradient(#171236,#0e0a22);border-bottom:4px solid var(--c);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:12px;font-weight:700;text-align:center;padding:4px}
+.cd svg{width:84px;height:84px}
+.mark{position:absolute;left:50%;top:0;bottom:0;width:3px;background:var(--y);box-shadow:0 0 14px var(--y);z-index:3}
+.mark:before{content:"";position:absolute;top:-1px;left:-8px;border:9px solid transparent;border-top-color:var(--y)}
+.fade{position:absolute;top:0;bottom:0;width:90px;z-index:2}
+.fade.l{left:0;background:linear-gradient(90deg,#0a0818,transparent)}.fade.r{right:0;background:linear-gradient(-90deg,#0a0818,transparent)}
+.row{display:flex;gap:10px;justify-content:center;margin-top:14px;flex-wrap:wrap;align-items:center}
+.res{text-align:center;margin-top:14px;min-height:30px;font-size:18px;font-weight:800}
+.dropgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-top:16px}
+.it{background:var(--p);border:1px solid var(--ln);border-bottom:4px solid var(--c);border-radius:12px;padding:8px;text-align:center;font-size:12px;font-weight:700;cursor:pointer;position:relative}
+.it svg{width:64px;height:64px}.it .pv{color:var(--y);font-weight:900}
+.it.sel{outline:2px solid var(--g);box-shadow:0 0 16px #2cff8a66}
+.ug{display:grid;grid-template-columns:1fr 340px 1fr;gap:16px}
+@media(max-width:900px){.ug{grid-template-columns:1fr}}
+.panel{background:var(--p);border:1px solid var(--ln);border-radius:16px;padding:14px;min-height:260px}
+.wheel{position:relative;width:260px;height:260px;margin:auto}
+.wheel svg{width:100%;height:100%}
+.ptr{position:absolute;inset:0;transition:transform 4s cubic-bezier(.12,.7,.1,1)}
+.ptr:after{content:"";position:absolute;left:50%;top:-4px;margin-left:-8px;border:8px solid transparent;border-top:0;border-bottom:18px solid #fff;filter:drop-shadow(0 0 6px #fff)}
+.wc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:900}
+.wc b{font-size:34px}
+.mults{display:flex;gap:6px;justify-content:center;margin:12px 0}
+.mults button{background:var(--p2);color:#fff;border:1px solid var(--ln);border-radius:8px;padding:7px 12px;font-weight:800;cursor:pointer}
+.mults button.on{background:var(--acc);border-color:#fff}
+.empty{color:#778;text-align:center;padding:30px 6px;font-size:14px}
+.hide{display:none}
+.big{display:flex;justify-content:center}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#000c;border:1px solid var(--acc);padding:10px 18px;border-radius:12px;font-weight:700;z-index:50}
+footer{text-align:center;color:#556;font-size:12px;padding:24px}
+</style></head><body>
+<div class="top">
+ <div class="logo"><svg width="38" height="38" viewBox="0 0 64 64"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#00e0ff"/><stop offset="1" stop-color="#7c5cff"/></linearGradient></defs><rect x="3" y="3" width="58" height="58" rx="15" fill="#120d2e" stroke="url(#lg)" stroke-width="4"/><path d="M20 46V20h22M20 32h16" stroke="url(#lg)" stroke-width="7" fill="none" stroke-linecap="round"/><circle cx="46" cy="44" r="4" fill="#ffd23f"/></svg><span><b>F1DYZ</b> CASES</span></div>
+ <nav><button class="on" data-t="cases">Кейсы</button><button data-t="upg">Апгрейдер</button><button data-t="inv">Инвентарь <span id="ic"></span></button></nav>
+ <div class="bal"><div class="v"><svg width="20" height="20" viewBox="0 0 64 64"><circle cx="32" cy="32" r="28" fill="#ffd23f"/><text x="32" y="43" text-anchor="middle" font-size="30" font-weight="900" fill="#a56a00">F</text></svg><span id="bal">0</span></div><button class="btn warn" id="bonus">+ Бонус</button></div>
+</div>
+<div class="feed" id="feed"></div>
+<div class="wrap">
+
+<section id="t-cases">
+ <div class="hero"><div><h1>Открывай кейсы. Апгрейдь. Забирай.</h1><p>Самый честный магазин на районе — 100% не скам, админ клянётся мамой.</p>
+ <div class="stamps"><span>✅ НЕ СКАМ</span><span>⚡ Моментальная выдача</span><span>🔒 Безопасно</span><span>💬 Поддержка 24/7</span><span>🏆 Честные шансы*</span></div></div>
+ <svg width="150" height="120" viewBox="0 0 150 120"><g id="heroGem"></g></svg></div>
+ <h2>Кейсы</h2><div class="cases" id="cases"></div>
+</section>
+
+<section id="t-open" class="hide">
+ <button class="btn alt" id="back">← Назад к кейсам</button>
+ <h2 id="oname" style="margin-top:14px"></h2>
+ <div class="roll"><div class="view"><div class="mark"></div><div class="fade l"></div><div class="fade r"></div><div class="strip" id="strip"></div></div>
+  <div class="row"><button class="btn" id="openBtn">Открыть</button><button class="btn alt" id="fastBtn">Быстро</button></div>
+  <div class="res" id="res"></div></div>
+ <h2 style="margin-top:20px">Что внутри</h2><div class="dropgrid" id="inside"></div>
+</section>
+
+<section id="t-upg" class="hide">
+ <h2>Апгрейдер</h2>
+ <div class="ug">
+  <div class="panel"><b>Твой предмет</b><div class="dropgrid" id="ugInv"></div></div>
+  <div class="panel"><div class="wheel"><svg viewBox="0 0 260 260"><circle cx="130" cy="130" r="110" fill="none" stroke="#2b2460" stroke-width="22"/><circle id="arc" cx="130" cy="130" r="110" fill="none" stroke="#2cff8a" stroke-width="22" stroke-dasharray="0 999" transform="rotate(-90 130 130)" stroke-linecap="butt"/></svg><div class="ptr" id="ptr"></div><div class="wc"><span style="color:#9a9ac0;font-size:12px">ШАНС</span><b id="chance">—</b><span id="ugTxt" style="font-size:12px;color:#9a9ac0"></span></div></div>
+   <div class="mults" id="mults"></div><div class="row"><button class="btn" id="ugGo" disabled>Апгрейднуть</button></div><div class="res" id="ugRes"></div></div>
+  <div class="panel"><b>Что получишь</b><div id="ugTarget" class="empty">Выбери предмет и множитель</div></div>
+ </div>
+</section>
+
+<section id="t-inv" class="hide">
+ <h2>Инвентарь</h2><div class="row" style="justify-content:flex-start"><button class="btn warn" id="sellAll">Продать всё</button></div>
+ <div class="dropgrid" id="inv"></div>
+</section>
+</div>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const RC={c:'#8b93b8',u:'#3da5ff',r:'#8a5cff',e:'#ff4de0',l:'#ffb020',m:'#ff3d3d'};
+const ICON={
+gem:c=>`<svg viewBox="0 0 64 64"><polygon points="32,5 56,22 32,60 8,22" fill="${c}" stroke="#0007" stroke-width="2"/><polygon points="8,22 56,22 32,60" fill="#0003"/><polygon points="32,5 21,22 43,22" fill="#fff6"/></svg>`,
+pick:c=>`<svg viewBox="0 0 64 64"><rect x="29" y="14" width="6" height="46" rx="3" fill="#a06a2c"/><path d="M5 26Q32-6 59 26Q32 14 5 26Z" fill="${c}" stroke="#0007" stroke-width="2"/><circle cx="32" cy="22" r="3" fill="#fff"/></svg>`,
+tok:c=>`<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="27" fill="${c}" stroke="#0007" stroke-width="3"/><circle cx="32" cy="32" r="19" fill="none" stroke="#0006" stroke-width="3"/><text x="32" y="41" text-anchor="middle" font-size="24" font-weight="900" fill="#0008">T</text></svg>`,
+flag:c=>`<svg viewBox="0 0 64 64"><rect x="14" y="8" width="5" height="52" rx="2" fill="#ccd"/><path d="M19 10H54L46 24L54 38H19Z" fill="${c}" stroke="#0007" stroke-width="2"/></svg>`,
+frog:c=>`<svg viewBox="0 0 64 64"><ellipse cx="32" cy="38" rx="26" ry="20" fill="${c}"/><circle cx="20" cy="22" r="10" fill="${c}"/><circle cx="44" cy="22" r="10" fill="${c}"/><circle cx="20" cy="22" r="5" fill="#fff"/><circle cx="44" cy="22" r="5" fill="#fff"/><circle cx="21" cy="23" r="2.5" fill="#000"/><circle cx="43" cy="23" r="2.5" fill="#000"/><path d="M18 42Q32 52 46 42" stroke="#0007" stroke-width="3" fill="none"/></svg>`,
+crown:c=>`<svg viewBox="0 0 64 64"><path d="M8 48L12 18L24 32L32 12L40 32L52 18L56 48Z" fill="${c}" stroke="#0007" stroke-width="2"/><rect x="8" y="48" width="48" height="8" rx="2" fill="${c}" stroke="#0007" stroke-width="2"/><circle cx="32" cy="38" r="4" fill="#fff"/></svg>`};
+const ITEMS=[
+{n:'Носок админа',v:20,r:'c',i:'flag',col:'#8b93b8'},
+{n:'100 В-Баксов',v:100,r:'c',i:'gem',col:'#6fcfff'},
+{n:'Жаба-гарант',v:160,r:'c',i:'frog',col:'#4cd964'},
+{n:'Красный флаг',v:260,r:'u',i:'flag',col:'#ff4d6d'},
+{n:'500 В-Баксов',v:480,r:'u',i:'gem',col:'#3da5ff'},
+{n:'Токен',v:800,r:'r',i:'tok',col:'#ffd23f'},
+{n:'1000 В-Баксов',v:1000,r:'r',i:'gem',col:'#8a5cff'},
+{n:'Кирка Минти',v:1900,r:'e',i:'pick',col:'#8ff0ff'},
+{n:'2800 В-Баксов',v:3000,r:'e',i:'gem',col:'#ff4de0'},
+{n:'5000 В-Баксов',v:5200,r:'l',i:'gem',col:'#ffb020'},
+{n:'Доверие админа',v:12000,r:'m',i:'crown',col:'#ff3d3d'}];
+const CASES=[
+{n:'Стартовый',p:100,c:'#3da5ff',tag:''},
+{n:'Минти',p:350,c:'#8ff0ff',tag:'HOT'},
+{n:'Токен-бокс',p:800,c:'#ffd23f',tag:''},
+{n:'ТОЧНО НЕ СКАМ',p:2000,c:'#2cff8a',tag:'NEW'},
+{n:'Админский',p:6000,c:'#ff3d3d',tag:'VIP'}];
+const boxSVG=c=>`<svg class="box" viewBox="0 0 130 110"><path d="M10 40L65 12L120 40L65 68Z" fill="${c}" opacity=".9"/><path d="M10 40V82L65 108V68Z" fill="${c}" opacity=".55"/><path d="M120 40V82L65 108V68Z" fill="${c}" opacity=".35"/><path d="M65 68V108" stroke="#fff6" stroke-width="3"/><path d="M38 26L92 54" stroke="#fff5" stroke-width="3"/><circle cx="65" cy="40" r="8" fill="#fff"/></svg>`;
+const ic=(it)=>ICON[it.i](it.col);
+let S=JSON.parse(localStorage.getItem('f1s')||'null')||{bal:1000,inv:[]};
+function save(){try{localStorage.setItem('f1s',JSON.stringify(S))}catch(e){}}
+function ui(){ $('#bal').textContent=S.bal.toLocaleString('ru');$('#ic').textContent=S.inv.length?'('+S.inv.length+')':'';save()}
+function toast(t){const d=document.createElement('div');d.className='toast';d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),2200)}
+$('#bonus').onclick=()=>{S.bal+=500;ui();toast('Админ накинул +500 F-коинов')};
+function tab(t){['cases','open','upg','inv'].forEach(x=>$('#t-'+x).classList.toggle('hide',x!==t));$$('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===(t==='open'?'cases':t)));if(t==='upg')renderUg();if(t==='inv')renderInv()}
+$$('nav button').forEach(b=>b.onclick=()=>tab(b.dataset.t));
+$('#heroGem').innerHTML=`<g transform="translate(20 0) scale(1.6)">${ICON.gem('#6fe0ff').replace(/<\/?svg[^>]*>/g,'')}</g>`;
+/* cases */
+$('#cases').innerHTML=CASES.map((c,i)=>`<div class="case" style="--cc:${c.c}" onclick="openCase(${i})">${c.tag?`<span class="tag">${c.tag}</span>`:''}${boxSVG(c.c)}<h3>${c.n}</h3><div class="pr">${c.p} ₣</div><small>${pool(c).length} предметов</small></div>`).join('');
+function pool(c){return ITEMS.filter(it=>it.v<=c.p*8&&it.v>=c.p*.12)}
+function pick(c){const p=pool(c);const w=p.map(it=>Math.pow(it.v,-1.25));const s=w.reduce((a,b)=>a+b,0);let x=Math.random()*s;for(let i=0;i<p.length;i++){x-=w[i];if(x<=0)return p[i]}return p[0]}
+function card(it){return `<div class="cd" style="--c:${RC[it.r]}">${ic(it)}<span>${it.n}</span></div>`}
+let cur=null,busy=false;
+function openCase(i){cur=CASES[i];$('#oname').textContent=cur.n+' — '+cur.p+' ₣';$('#res').textContent='';
+ $('#strip').style.transition='none';$('#strip').style.transform='translateX(0)';
+ const p=pool(cur);$('#strip').innerHTML=Array.from({length:12},()=>card(p[Math.random()*p.length|0])).join('');
+ $('#inside').innerHTML=p.map(it=>`<div class="it" style="--c:${RC[it.r]}">${ic(it)}<div>${it.n}</div><div class="pv">${it.v} ₣</div></div>`).join('');
+ tab('open')}
+$('#back').onclick=()=>{if(!busy)tab('cases')};
+function roll(fast){
+ if(busy)return; if(S.bal<cur.p){toast('Не хватает F-коинов — жми «Бонус»');return}
+ busy=true;S.bal-=cur.p;ui();$('#openBtn').disabled=$('#fastBtn').disabled=true;$('#res').textContent='';
+ const win=pick(cur),p=pool(cur),N=56,W=146,idx=48;
+ const arr=Array.from({length:N},(_,k)=>k===idx?win:p[Math.random()*p.length|0]);
+ const st=$('#strip');st.style.transition='none';st.style.transform='translateX(0)';st.innerHTML=arr.map(card).join('');
+ const vw=$('.view').clientWidth,off=(Math.random()-.5)*100;
+ const x=-(idx*W+W/2-vw/2+off);void st.offsetWidth;
+ const dur=fast?1.2:6;st.style.transition=`transform ${dur}s cubic-bezier(.08,.6,.1,1)`;st.style.transform=`translateX(${x}px)`;
+ setTimeout(()=>{S.inv.push(win);ui();feedAdd(win,'Ты');
+  $('#res').innerHTML=`<span style="color:${RC[win.r]}">Выпало: ${win.n} (${win.v} ₣)</span> <button class="btn warn" id="sellNow" style="margin-left:10px">Продать за ${win.v}</button>`;
+  $('#sellNow').onclick=()=>{const k=S.inv.lastIndexOf(win);if(k>-1){S.inv.splice(k,1);S.bal+=win.v;ui();$('#res').textContent='Продано +'+win.v+' ₣'}};
+  busy=false;$('#openBtn').disabled=$('#fastBtn').disabled=false},dur*1000+150)}
+$('#openBtn').onclick=()=>roll(false);$('#fastBtn').onclick=()=>roll(true);
+/* feed */
+const NAMES=['Kirill_228','xXProXx','Dimon','ЖабаБро','ne_scam','Vasya777','fort_king','Sanya','IIIkolnik','mintyLover'];
+function feedAdd(it,who){const f=$('#feed'),d=document.createElement('div');d.className='fd';d.style.setProperty('--c',RC[it.r]);d.innerHTML=ic(it)+`<small>${who}<br>${it.v} ₣</small>`;f.prepend(d);while(f.children.length>14)f.lastChild.remove()}
+for(let i=0;i<14;i++)feedAdd(ITEMS[Math.random()*ITEMS.length|0],NAMES[i%NAMES.length]);
+setInterval(()=>feedAdd(pick(CASES[Math.random()*CASES.length|0]),NAMES[Math.random()*NAMES.length|0]),2600);
+/* inventory */
+function renderInv(){ $('#inv').innerHTML=S.inv.length?S.inv.map((it,i)=>`<div class="it" style="--c:${RC[it.r]}">${ic(it)}<div>${it.n}</div><div class="pv">${it.v} ₣</div><button class="btn warn" style="padding:4px 8px;font-size:12px;margin-top:4px" onclick="sell(${i})">Продать</button></div>`).join(''):'<div class="empty">Пусто. Открой кейс!</div>'}
+function sell(i){const it=S.inv.splice(i,1)[0];S.bal+=it.v;ui();renderInv()}
+$('#sellAll').onclick=()=>{S.bal+=S.inv.reduce((a,b)=>a+b.v,0);S.inv=[];ui();renderInv()};
+/* upgrader */
+let ugSel=-1,mult=2,rot=0;
+$('#mults').innerHTML=[1.5,2,3,5,10].map(m=>`<button data-m="${m}" class="${m===2?'on':''}">x${m}</button>`).join('');
+$$('#mults button').forEach(b=>b.onclick=()=>{mult=+b.dataset.m;$$('#mults button').forEach(x=>x.classList.toggle('on',x===b));calc()});
+function renderUg(){ $('#ugInv').innerHTML=S.inv.length?S.inv.map((it,i)=>`<div class="it ${i===ugSel?'sel':''}" style="--c:${RC[it.r]}" onclick="ugSel=${i};renderUg();calc()">${ic(it)}<div>${it.n}</div><div class="pv">${it.v} ₣</div></div>`).join(''):'<div class="empty" style="grid-column:1/-1">Нет предметов. Открой кейс.</div>';calc()}
+function target(){if(ugSel<0||!S.inv[ugSel])return null;const v=S.inv[ugSel].v*mult;let best=ITEMS[0];ITEMS.forEach(it=>{if(Math.abs(it.v-v)<Math.abs(best.v-v))best=it});return {it:best,v,real:Math.min(best.v/S.inv[ugSel].v,mult)}}
+function chance(){const t=target();if(!t)return 0;const r=t.it.v/S.inv[ugSel].v;return Math.max(2,Math.min(90,Math.round(95/Math.max(r,1.05))))}
+function calc(){const t=target();if(!t){$('#chance').textContent='—';$('#arc').setAttribute('stroke-dasharray','0 999');$('#ugGo').disabled=true;$('#ugTarget').innerHTML='<div class="empty">Выбери предмет и множитель</div>';return}
+ const ch=chance();$('#chance').textContent=ch+'%';$('#ugTxt').textContent=S.inv[ugSel].v+' → '+t.it.v;
+ const C=2*Math.PI*110;$('#arc').setAttribute('stroke-dasharray',`${C*ch/100} ${C}`);
+ $('#ugTarget').innerHTML=`<div class="dropgrid"><div class="it" style="--c:${RC[t.it.r]};grid-column:1/-1">${ic(t.it)}<div>${t.it.n}</div><div class="pv">${t.it.v} ₣</div></div></div>`;$('#ugGo').disabled=false}
+$('#ugGo').onclick=()=>{const t=target();if(!t)return;const ch=chance(),win=Math.random()*100<ch;
+ $('#ugGo').disabled=true;const ang=win?Math.random()*ch*3.6:ch*3.6+Math.random()*(360-ch*3.6);
+ rot+=360*5+(360-(rot%360))+ang;const p=$('#ptr');p.style.transform=`rotate(${rot}deg)`;
+ setTimeout(()=>{const old=S.inv[ugSel];S.inv.splice(ugSel,1);ugSel=-1;
+  if(win){S.inv.push(t.it);feedAdd(t.it,'Ты');$('#ugRes').innerHTML=`<span style="color:var(--g)">УСПЕХ! Получено: ${t.it.n}</span>`}else $('#ugRes').innerHTML=`<span style="color:var(--r)">Не повезло, ${old.n} сгорел 🔥</span>`;
+  ui();renderUg()},4200)};
+ui();
+</script></body></html>
